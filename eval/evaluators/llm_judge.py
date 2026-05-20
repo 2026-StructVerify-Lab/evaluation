@@ -8,7 +8,7 @@ import re
 from collections.abc import Callable
 from typing import Any
 
-from eval.evaluators.common import (
+from structverify.eval.evaluators.common import (
     aggregate_results,
     extract_numbers,
     judge_row_prefix,
