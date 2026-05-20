@@ -1,0 +1,624 @@
+[
+  {
+    "label": "06e304ef-ef1b-40eb-bede-c052a15f7e98",
+    "saved_path": null,
+    "domain": "population",
+    "anchor_year": 2025,
+    "verdict_distribution": {
+      "match": 4,
+      "mismatch": 1
+    },
+    "consistency": {
+      "total": 5,
+      "summary": {
+        "value_traceability": {
+          "pass": 3,
+          "fail": 2,
+          "skip": 0,
+          "pass_rate": 0.6
+        },
+        "unit_traceability": {
+          "pass": 5,
+          "fail": 0,
+          "skip": 0,
+          "pass_rate": 1.0
+        },
+        "temporal_3way_consistency": {
+          "pass": 0,
+          "fail": 3,
+          "skip": 2,
+          "pass_rate": 0.0
+        },
+        "schema_completeness": {
+          "pass": 5,
+          "fail": 0,
+          "skip": 0,
+          "pass_rate": 1.0
+        },
+        "verdict_diff_consistency": {
+          "pass": 5,
+          "fail": 0,
+          "skip": 0,
+          "pass_rate": 1.0
+        },
+        "evidence_relevance": {
+          "pass": 5,
+          "fail": 0,
+          "skip": 0,
+          "pass_rate": 1.0
+        }
+      },
+      "details": [
+        {
+          "sent_id": "b0002_s0000",
+          "claim_text": "코로나 이후 미뤘던 결혼 본격화\n“결혼·출산 환경 개선 지속 필요”\n[서울경제]\n올해 4월 출생아 수는 총 2만 171명\n으로 지난해 같은 달(",
+          "value_traceability": {
+            "pass": false,
+            "schema_value": 20171.0,
+            "numbers_in_text": [
+              "4",
+              "2",
+              "171",
+              "1",
+              "9059",
+              "6.7"
+            ],
+            "reason": "schema.value=20171.0가 원문 수치 ['4', '2', '171', '1', '9059', '6.7']에 없음"
+          },
+          "unit_traceability": {
+            "pass": true,
+            "schema_unit": "명",
+            "reason": "원문에서 단위 추적 성공"
+          },
+          "temporal_3way_consistency": {
+            "pass": false,
+            "reason": "그래프='2025' vs 스키마='2025-04' 불일치 (스키마 유도가 temporal hint 무시)",
+            "broken_at": "L5_schema",
+            "mode": "2way",
+            "graph_resolved": "2025",
+            "schema_time_period": "2025-04",
+            "evidence_time_period": "2025",
+            "graph_expression": "올해"
+          },
+          "schema_completeness": {
+            "pass": true,
+            "score": 1.0,
+            "filled": [
+              "value",
+              "unit",
+              "indicator",
+              "time_period"
+            ],
+            "missing": []
+          },
+          "verdict_diff_consistency": {
+            "pass": true,
+            "verdict": "match",
+            "expected_verdict": "match",
+            "diff_pct": 2.96,
+            "claim_value": 20171.0,
+            "official_value": 20787.0,
+            "reason": "verdict와 수치 차이가 일관성 있음"
+          },
+          "evidence_relevance": {
+            "pass": true,
+            "indicator": "출생아 수",
+            "query_keyword": "[서울경제] 출생아 수 전체",
+            "source_name": "월.분기.연간 인구동향(출생사망혼인이혼)",
+            "keyword_overlap": true,
+            "source_overlap": false,
+            "reason": "indicator 토큰이 쿼리 키워드에 포함됨"
+          }
+        },
+        {
+          "sent_id": "b0002_s0000",
+          "claim_text": "코로나 이후 미뤘던 결혼 본격화\n“결혼·출산 환경 개선 지속 필요”\n[서울경제]\n올해 4월 출생아 수는 총 2만 171명\n으로 지난해 같은 달(",
+          "value_traceability": {
+            "pass": true,
+            "schema_value": 6.7,
+            "numbers_in_text": [
+              "4",
+              "2",
+              "171",
+              "1",
+              "9059",
+              "6.7"
+            ],
+            "reason": "원문에서 수치 추적 성공"
+          },
+          "unit_traceability": {
+            "pass": true,
+            "schema_unit": "%",
+            "reason": "원문에서 단위 추적 성공"
+          },
+          "temporal_3way_consistency": {
+            "pass": false,
+            "reason": "그래프='2025' vs 스키마='2025-04' 불일치 (스키마 유도가 temporal hint 무시)",
+            "broken_at": "L5_schema",
+            "mode": "2way",
+            "graph_resolved": "2025",
+            "schema_time_period": "2025-04",
+            "evidence_time_period": "2025",
+            "graph_expression": "올해"
+          },
+          "schema_completeness": {
+            "pass": true,
+            "score": 1.0,
+            "filled": [
+              "value",
+              "unit",
+              "indicator",
+              "time_period"
+            ],
+            "missing": []
+          },
+          "verdict_diff_consistency": {
+            "pass": true,
+            "verdict": "mismatch",
+            "expected_verdict": "unverifiable",
+            "diff_pct": 99.97,
+            "claim_value": 6.7,
+            "official_value": 24382.0,
+            "reason": "verdict와 수치 차이가 일관성 있음"
+          },
+          "evidence_relevance": {
+            "pass": true,
+            "indicator": "출생아 수 증가율",
+            "query_keyword": "[서울경제] 출생아 수 증가율 전체",
+            "source_name": "시군구/인구동태건수 및 동태율(출생사망혼인이혼)",
+            "keyword_overlap": true,
+            "source_overlap": false,
+            "reason": "indicator 토큰이 쿼리 키워드에 포함됨"
+          }
+        },
+        {
+          "sent_id": "b0002_s0002",
+          "claim_text": "올 4월 합계출산율도 0.76명으로 지난해 같은 달보다 0.04명 증가했다.",
+          "value_traceability": {
+            "pass": true,
+            "schema_value": 0.76,
+            "numbers_in_text": [
+              "4",
+              "0.76",
+              "0.04"
+            ],
+            "reason": "원문에서 수치 추적 성공"
+          },
+          "unit_traceability": {
+            "pass": true,
+            "schema_unit": "명",
+            "reason": "원문에서 단위 추적 성공"
+          },
+          "temporal_3way_consistency": {
+            "pass": false,
+            "reason": "그래프='2024-04' vs 스키마='2025-04' 불일치 (스키마 유도가 temporal hint 무시)",
+            "broken_at": "L5_schema",
+            "mode": "2way",
+            "graph_resolved": "2024-04",
+            "schema_time_period": "2025-04",
+            "evidence_time_period": "2024",
+            "graph_expression": "지난해 같은 달"
+          },
+          "schema_completeness": {
+            "pass": true,
+            "score": 1.0,
+            "filled": [
+              "value",
+              "unit",
+              "indicator",
+              "time_period"
+            ],
+            "missing": []
+          },
+          "verdict_diff_consistency": {
+            "pass": true,
+            "verdict": "match",
+            "expected_verdict": "match",
+            "diff_pct": 3.54,
+            "claim_value": 0.76,
+            "official_value": 0.734,
+            "reason": "verdict와 수치 차이가 일관성 있음"
+          },
+          "evidence_relevance": {
+            "pass": true,
+            "indicator": "합계출산율",
+            "query_keyword": "합계출산율 전체",
+            "source_name": "합계출산율",
+            "keyword_overlap": true,
+            "source_overlap": true,
+            "reason": "indicator 토큰이 쿼리 키워드에 포함됨"
+          }
+        },
+        {
+          "sent_id": "b0002_s0003",
+          "claim_text": "올 4월 혼인 건수는 1만 7921건으로 전년보다 3.9% 증가했다.",
+          "value_traceability": {
+            "pass": false,
+            "schema_value": 17921.0,
+            "numbers_in_text": [
+              "4",
+              "1",
+              "7921",
+              "3.9"
+            ],
+            "reason": "schema.value=17921.0가 원문 수치 ['4', '1', '7921', '3.9']에 없음"
+          },
+          "unit_traceability": {
+            "pass": true,
+            "schema_unit": "건",
+            "reason": "원문에서 단위 추적 성공"
+          },
+          "temporal_3way_consistency": {
+            "pass": null,
+            "reason": "graph_temporal.resolved 없음 — 상대 시점 문장인데 그래프 미연결 의심",
+            "mode": "skip",
+            "has_relative_expression": true
+          },
+          "schema_completeness": {
+            "pass": true,
+            "score": 1.0,
+            "filled": [
+              "value",
+              "unit",
+              "indicator",
+              "time_period"
+            ],
+            "missing": []
+          },
+          "verdict_diff_consistency": {
+            "pass": true,
+            "verdict": "match",
+            "expected_verdict": "match",
+            "diff_pct": 8.26,
+            "claim_value": 17921.0,
+            "official_value": 19534.0,
+            "reason": "verdict와 수치 차이가 일관성 있음"
+          },
+          "evidence_relevance": {
+            "pass": true,
+            "indicator": "혼인 건수",
+            "query_keyword": "혼인 건수 전체",
+            "source_name": "시도/부부의 혼인종류별 혼인",
+            "keyword_overlap": true,
+            "source_overlap": true,
+            "reason": "indicator 토큰이 쿼리 키워드에 포함됨"
+          }
+        },
+        {
+          "sent_id": "b0002_s0003",
+          "claim_text": "올 4월 혼인 건수는 1만 7921건으로 전년보다 3.9% 증가했다.",
+          "value_traceability": {
+            "pass": true,
+            "schema_value": 3.9,
+            "numbers_in_text": [
+              "4",
+              "1",
+              "7921",
+              "3.9"
+            ],
+            "reason": "원문에서 수치 추적 성공"
+          },
+          "unit_traceability": {
+            "pass": true,
+            "schema_unit": "%",
+            "reason": "원문에서 단위 추적 성공"
+          },
+          "temporal_3way_consistency": {
+            "pass": null,
+            "reason": "graph_temporal.resolved 없음 — 상대 시점 문장인데 그래프 미연결 의심",
+            "mode": "skip",
+            "has_relative_expression": true
+          },
+          "schema_completeness": {
+            "pass": true,
+            "score": 1.0,
+            "filled": [
+              "value",
+              "unit",
+              "indicator",
+              "time_period"
+            ],
+            "missing": []
+          },
+          "verdict_diff_consistency": {
+            "pass": true,
+            "verdict": "match",
+            "expected_verdict": "match",
+            "diff_pct": 2.5,
+            "claim_value": 3.9,
+            "official_value": 4.0,
+            "reason": "verdict와 수치 차이가 일관성 있음"
+          },
+          "evidence_relevance": {
+            "pass": true,
+            "indicator": "혼인 건수 증가율",
+            "query_keyword": "혼인 건수 증가율 전체",
+            "source_name": "시도/부부의 혼인종류별 혼인",
+            "keyword_overlap": true,
+            "source_overlap": true,
+            "reason": "indicator 토큰이 쿼리 키워드에 포함됨"
+          }
+        }
+      ]
+    },
+    "judge": {
+      "total": 5,
+      "summary": {
+        "indicator_judge": {
+          "pass": 5,
+          "fail": 0,
+          "skip": 0,
+          "pass_rate": 1.0
+        },
+        "explanation_judge": {
+          "pass": 2,
+          "fail": 3,
+          "skip": 0,
+          "pass_rate": 0.4
+        },
+        "evidence_relevance_judge": {
+          "pass": 5,
+          "fail": 0,
+          "skip": 0,
+          "pass_rate": 1.0
+        }
+      },
+      "details": [
+        {
+          "sent_id": "b0002_s0000",
+          "claim_text": "코로나 이후 미뤘던 결혼 본격화\n“결혼·출산 환경 개선 지속 필요”\n[서울경제]\n올해 4월 출생아 수는 총 2만 171명\n으로 지난해 같은 달(",
+          "indicator_judge": {
+            "pass": true,
+            "verdict": "PASS",
+            "llm_response": "1. 근거 : 올해 4월 출생아 수는 총 2만 171명 으로 지난해 같은 달(1만 9059명)보다 6.7% 늘었다는 부분에서 '출생아 수'라는 지표를 확인할 수 있으며, 이 지표가 추출된 indicator인 '출생아 수'와 일치함을 알 수 있다.\n \n2. 판정 : PASS",
+            "indicator": "출생아 수"
+          },
+          "explanation_judge": {
+            "pass": false,
+            "verdict": "FAIL",
+            "llm_response": "1. 근거: \n- 실제 KOSIS에서는 2025년 4월 출생아 수가 아닌 2022년 4월 출생아 수로 확인됩니다. 따라서 년도 정보가 잘못되었습니다.\n\n2. 판정 : FAIL",
+            "method": "llm",
+            "rule_check": {
+              "pass": false,
+              "method": "rule",
+              "explanation_numbers": [
+                "1",
+                "171",
+                "2",
+                "20",
+                "2025",
+                "3.0",
+                "4",
+                "787",
+                "8000",
+                "95"
+              ],
+              "known_numbers": [
+                "1",
+                "171",
+                "2",
+                "20787",
+                "20787.0",
+                "4",
+                "6.7",
+                "9059"
+              ],
+              "hallucinated_candidates": [
+                "20",
+                "3.0",
+                "787",
+                "8000",
+                "95"
+              ],
+              "needs_llm_review": true,
+              "reason": "환각 의심 수치: ['20', '3.0', '787', '8000', '95']"
+            }
+          },
+          "evidence_relevance_judge": {
+            "pass": true,
+            "verdict": "PASS",
+            "llm_response": "1. 근거 : '월.분기.연간 인구동향(출생사망혼인이혼)' 테이블은 출생, 사망, 혼인, 이혼 등 인구 동향 관련 통계를 제공하며, 이 중 '출생' 항목에서 출생아 수 정보를 확인할 수 있으므로,  '출생아 수'라는 지표를 검증하기에 적합하다.\n\n2. 판정 : PASS",
+            "indicator": "출생아 수",
+            "source_name": "월.분기.연간 인구동향(출생사망혼인이혼)",
+            "query_keyword": "[서울경제] 출생아 수 전체"
+          }
+        },
+        {
+          "sent_id": "b0002_s0000",
+          "claim_text": "코로나 이후 미뤘던 결혼 본격화\n“결혼·출산 환경 개선 지속 필요”\n[서울경제]\n올해 4월 출생아 수는 총 2만 171명\n으로 지난해 같은 달(",
+          "indicator_judge": {
+            "pass": true,
+            "verdict": "PASS",
+            "llm_response": "1. 근거 : 올해 4월 출생아 수는 총 2만 171명으로 지난해 같은 달(1만 9059명)보다 6.7% 늘었다는 부분에서 '출생아 수'라는 실제 지표를 확인할 수 있으며, 이를 바탕으로 '출생아 수 증가율'이라는 추출된 indicator가 도출되었다.\n \n2. 판정 : PASS",
+            "indicator": "출생아 수 증가율"
+          },
+          "explanation_judge": {
+            "pass": true,
+            "method": "rule_only",
+            "rule_check": {
+              "pass": true,
+              "method": "rule",
+              "explanation_numbers": [
+                "24382",
+                "4",
+                "6.7"
+              ],
+              "known_numbers": [
+                "1",
+                "171",
+                "2",
+                "24382",
+                "24382.0",
+                "4",
+                "6.7",
+                "9059"
+              ],
+              "hallucinated_candidates": [],
+              "needs_llm_review": false,
+              "reason": "환각 의심 수치 없음"
+            },
+            "reason": "규칙 검사 통과 — LLM 호출 생략"
+          },
+          "evidence_relevance_judge": {
+            "pass": true,
+            "verdict": "PASS",
+            "llm_response": "1. 근거 : '시군구/인구동태건수 및 동태율(출생사망혼인이혼)' 테이블은 출생, 사망, 혼인, 이혼 등 인구동태 건수와 동태율을 다루고 있으며, 이 중에서 '출생'은 우리가 검증하고자 하는 '출생아 수 증가율'이라는 지표와 관련 있는 통계 범주이다.\n\n2. 판정 : PASS",
+            "indicator": "출생아 수 증가율",
+            "source_name": "시군구/인구동태건수 및 동태율(출생사망혼인이혼)",
+            "query_keyword": "[서울경제] 출생아 수 증가율 전체"
+          }
+        },
+        {
+          "sent_id": "b0002_s0002",
+          "claim_text": "올 4월 합계출산율도 0.76명으로 지난해 같은 달보다 0.04명 증가했다.",
+          "indicator_judge": {
+            "pass": true,
+            "verdict": "PASS",
+            "llm_response": "1. 근거 : 올 4월 합계출산율도 0.76명으로 지난해 같은 달보다 0.04명 증가했다는 문장에서 '합계출산율'이 실제 지표로 언급되었다.\n2. 판정 : PASS",
+            "indicator": "합계출산율"
+          },
+          "explanation_judge": {
+            "pass": false,
+            "verdict": "FAIL",
+            "llm_response": "1. 근거: KOSIS '합계출산율' 지표에 따르면, 2024년 4월 대한민국의 합계출산율은 0.72명이었으며, 해당 수치는 올 4월인 2025년에는 0.76명으로 전년 동월 대비 0.04명 증가했습니다. \n\n->  KOSIS 공식 수치가 0.734인데 반해 설명에서는 0.72로 잘못 표기되어 있습니다.\n\n2. 판정 : FAIL",
+            "method": "llm",
+            "rule_check": {
+              "pass": false,
+              "method": "rule",
+              "explanation_numbers": [
+                "0.04",
+                "0.72",
+                "0.76",
+                "2024",
+                "2025",
+                "4",
+                "5.6",
+                "95"
+              ],
+              "known_numbers": [
+                "0.04",
+                "0.734",
+                "0.76",
+                "4"
+              ],
+              "hallucinated_candidates": [
+                "0.72",
+                "5.6",
+                "95"
+              ],
+              "needs_llm_review": true,
+              "reason": "환각 의심 수치: ['0.72', '5.6', '95']"
+            }
+          },
+          "evidence_relevance_judge": {
+            "pass": true,
+            "verdict": "PASS",
+            "llm_response": "1. 근거 : 합계출산율이라는 동일한 통계 범주를 다루고 있다.\n2. 판정 : PASS",
+            "indicator": "합계출산율",
+            "source_name": "합계출산율",
+            "query_keyword": "합계출산율 전체"
+          }
+        },
+        {
+          "sent_id": "b0002_s0003",
+          "claim_text": "올 4월 혼인 건수는 1만 7921건으로 전년보다 3.9% 증가했다.",
+          "indicator_judge": {
+            "pass": true,
+            "verdict": "PASS",
+            "llm_response": "1. 근거 : 올 4월 혼인 건수라는 원문의 실제 언급지표와 혼인 건수라는 추출된 indicator를 비교했을 때 동일하다.\n \n2. 판정 : PASS",
+            "indicator": "혼인 건수"
+          },
+          "explanation_judge": {
+            "pass": false,
+            "verdict": "FAIL",
+            "llm_response": "1. 근거: \n- 실제로는 2023년 자료인데, 설명에서는 2025년 자료라고 잘못 표기함\n- 두 해의 혼인 건수 차이가 크지 않음에도 불구하고(약 800건), 이를 바탕으로 전년 대비 3.9% 증가했다고 단정 지음\n\n2. 판정: FAIL",
+            "method": "llm",
+            "rule_check": {
+              "pass": false,
+              "method": "rule",
+              "explanation_numbers": [
+                "17",
+                "19",
+                "2025",
+                "3.9",
+                "4",
+                "534",
+                "8.3",
+                "92",
+                "921"
+              ],
+              "known_numbers": [
+                "1",
+                "19534",
+                "19534.0",
+                "3.9",
+                "4",
+                "7921"
+              ],
+              "hallucinated_candidates": [
+                "17",
+                "19",
+                "534",
+                "8.3",
+                "92",
+                "921"
+              ],
+              "needs_llm_review": true,
+              "reason": "환각 의심 수치: ['17', '19', '534', '8.3', '92', '921']"
+            }
+          },
+          "evidence_relevance_judge": {
+            "pass": true,
+            "verdict": "PASS",
+            "llm_response": "1. 근거 : 시도/부부의 혼인 종류별 혼인 테이블은 부부의 혼인 종류별로 분류한 각 시도별 혼인 건수를 다루고 있어, 혼인 건수라는 지표가 검증하고자 하는 범위와 일치한다.\n \n2. 판정 : PASS",
+            "indicator": "혼인 건수",
+            "source_name": "시도/부부의 혼인종류별 혼인",
+            "query_keyword": "혼인 건수 전체"
+          }
+        },
+        {
+          "sent_id": "b0002_s0003",
+          "claim_text": "올 4월 혼인 건수는 1만 7921건으로 전년보다 3.9% 증가했다.",
+          "indicator_judge": {
+            "pass": true,
+            "verdict": "PASS",
+            "llm_response": "1. 근거 : 올 4월 혼인 건수는 1만 7921건으로 전년보다 3.9% 증가했다는 원문의 내용에서 '전년보다 3.9% 증가'라는 부분이 해당 지표를 설명하고 있으며, 이를 추출하여 '혼인 건수 증가율'이라는 indicator로 표현하였다.\n \n2. 판정 : PASS",
+            "indicator": "혼인 건수 증가율"
+          },
+          "explanation_judge": {
+            "pass": true,
+            "method": "rule_only",
+            "rule_check": {
+              "pass": true,
+              "method": "rule",
+              "explanation_numbers": [
+                "2025",
+                "3.9",
+                "4.0"
+              ],
+              "known_numbers": [
+                "1",
+                "3.9",
+                "4",
+                "4.0",
+                "7921"
+              ],
+              "hallucinated_candidates": [],
+              "needs_llm_review": false,
+              "reason": "환각 의심 수치 없음"
+            },
+            "reason": "규칙 검사 통과 — LLM 호출 생략"
+          },
+          "evidence_relevance_judge": {
+            "pass": true,
+            "verdict": "PASS",
+            "llm_response": "1. 근거 : 시도/부부의 혼인 종류별 혼인 수가 나와있어, 혼인 건수 증가율이라는 지표를 검증할 수 있다.\n2. 판정 : PASS",
+            "indicator": "혼인 건수 증가율",
+            "source_name": "시도/부부의 혼인종류별 혼인",
+            "query_keyword": "혼인 건수 증가율 전체"
+          }
+        }
+      ]
+    }
+  }
+]

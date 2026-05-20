@@ -8,7 +8,7 @@ from __future__ import annotations
 import re
 from collections.abc import Callable
 
-from eval.evaluators.common import (
+from structverify.eval.evaluators.common import (
     aggregate_results,
     consistency_row_prefix,
     extract_numbers,

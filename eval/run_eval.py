@@ -32,17 +32,16 @@ import unicodedata
 from datetime import datetime
 from pathlib import Path
 
-# 프로젝트 루트를 sys.path에 추가 (eval/ 폴더에서 실행 시 import 오류 방지)
-_ROOT = Path(__file__).parent.parent
-sys.path.insert(0, str(_ROOT))
+# 백엔드 레포 루트 (structverify/eval/run_eval.py 기준)
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(_REPO_ROOT))
 
 # 프로젝트 루트의 .env 자동 로드 (CLOVASTUDIO_API_KEY 등)
 try:
     from dotenv import load_dotenv
-    load_dotenv(_ROOT / ".env")
+    load_dotenv(_REPO_ROOT / ".env")
 except ImportError:
-    # dotenv 미설치 시 직접 파싱 (fallback)
-    _env_path = _ROOT / ".env"
+    _env_path = _REPO_ROOT / ".env"
     if _env_path.exists():
         for _line in _env_path.read_text(encoding="utf-8").splitlines():
             _line = _line.strip()
@@ -50,15 +49,44 @@ except ImportError:
                 _k, _, _v = _line.partition("=")
                 os.environ.setdefault(_k.strip(), _v.strip())
 
-from eval.evaluators.common import format_metric_label
-from eval.evaluators.consistency import (
+from structverify.eval.evaluators.common import format_metric_label
+from structverify.eval.evaluators.consistency import (
     CONSISTENCY_FAIL_KEYS,
     run_all_consistency_checks,
 )
-from eval.evaluators.llm_judge import JUDGE_FAIL_KEYS
+from structverify.eval.evaluators.llm_judge import JUDGE_FAIL_KEYS
 
 
 # ── 유틸 ─────────────────────────────────────────────────────────────────────
+
+def normalize_eval_input(data: dict) -> dict:
+    """eval JSON / job.result / eval_export → eval 입력 dict."""
+    if isinstance(data.get("results"), list):
+        return data
+    export = data.get("eval_export")
+    if isinstance(export, dict) and isinstance(export.get("results"), list):
+        return export
+    nested = data.get("result")
+    if isinstance(nested, dict):
+        return normalize_eval_input(nested)
+    return data
+
+
+def coerce_eval_report(source) -> dict:
+    """VerificationReport | dict → eval 입력 dict."""
+    from structverify.core.schemas import VerificationReport
+    from structverify.eval.export import report_to_eval_json
+
+    if isinstance(source, VerificationReport):
+        return report_to_eval_json(source)
+    if isinstance(source, dict):
+        return normalize_eval_input(source)
+    raise TypeError(f"run_eval source must be VerificationReport or dict, got {type(source)!r}")
+
+
+def _normalize_eval_input(data: dict) -> dict:
+    return normalize_eval_input(data)
+
 
 def _load_samples(file_arg: str | None) -> list[tuple[str, dict]]:
     """
@@ -76,32 +104,35 @@ def _load_samples(file_arg: str | None) -> list[tuple[str, dict]]:
             print(f"[오류] 파일 없음: {path}")
             sys.exit(1)
         with open(path, encoding="utf-8") as f:
-            return [(path.name, json.load(f))]
+            return [(path.name, _normalize_eval_input(json.load(f)))]
 
     samples_dir = Path(__file__).parent / "data" / "samples"
     json_files = sorted(samples_dir.glob("*.json"))
     if not json_files:
         print(f"[오류] {samples_dir} 에 JSON 파일 없음")
         print("  힌트: python scripts/run_pipeline_Text.py 실행 후")
-        print("        cp test_outputs/pipeline_text_result.json eval/data/samples/")
+        print("        python structverify/eval/run_eval.py -f test_outputs/pipeline_text_result.json")
+        print("     또는 FastAPI job.result JSON (-f, eval_export 자동 unwrap)")
         sys.exit(1)
 
     result = []
     for p in json_files:
         with open(p, encoding="utf-8") as f:
-            result.append((p.name, json.load(f)))
+            result.append((p.name, _normalize_eval_input(json.load(f))))
     return result
 
 
-def _build_llm_client() -> object:
-    """LLMClient 인스턴스 생성. API 키 없으면 오류 출력 후 종료."""
+def _build_llm_client(*, required: bool = True) -> object | None:
+    """LLMClient 인스턴스 생성."""
     from structverify.utils.llm_client import LLMClient
 
     api_key = os.environ.get("CLOVASTUDIO_API_KEY") or os.environ.get("NCP_API_KEY")
     if not api_key:
-        print("[오류] CLOVASTUDIO_API_KEY 또는 NCP_API_KEY 가 없음")
-        print("  힌트: 프로젝트 루트 .env 에 CLOVASTUDIO_API_KEY=nv-xxx 추가")
-        sys.exit(1)
+        if required:
+            print("[오류] CLOVASTUDIO_API_KEY 또는 NCP_API_KEY 가 없음")
+            print("  힌트: 프로젝트 루트 .env 에 CLOVASTUDIO_API_KEY=nv-xxx 추가")
+            sys.exit(1)
+        return None
 
     return LLMClient(
         config={
@@ -230,51 +261,84 @@ def _print_fail_details(consistency: dict, judge: dict | None) -> None:
         print("\n  모든 검사 통과 — FAIL 케이스 없음")
 
 
-# ── 메인 ─────────────────────────────────────────────────────────────────────
+# ── 프로그램/API 호출 ─────────────────────────────────────────────────────────
+
+async def run_eval(
+    source,
+    *,
+    label: str = "pipeline",
+    judge: bool = False,
+    skip_consistency: bool = False,
+    verbose: bool = False,
+    save: bool = True,
+) -> dict:
+    """
+    파이프라인 산출물 평가. VerificationReport 또는 eval dict 를 받는다.
+
+    Returns:
+        {label, saved_path, domain, anchor_year, verdict_distribution,
+         consistency, judge}
+    """
+    report = coerce_eval_report(source)
+    print(f"\n[eval] 처리 중: {label}")
+
+    consistency_result: dict = {}
+    if not skip_consistency:
+        print("  → 내적 일관성 검사 실행...")
+        consistency_result = run_all_consistency_checks(report)
+
+    judge_result: dict | None = None
+    if judge:
+        llm_client = _build_llm_client(required=True)
+        from structverify.eval.evaluators.llm_judge import run_all_judge_checks
+        print("  → LLM Judge 실행 (HCX-003)...")
+        judge_result = await run_all_judge_checks(report, llm_client)
+
+    _print_summary(label, consistency_result, judge_result)
+    if verbose:
+        _print_fail_details(consistency_result, judge_result)
+
+    entry = {
+        "label": label,
+        "saved_path": None,
+        "domain": report.get("domain"),
+        "anchor_year": report.get("anchor_year"),
+        "verdict_distribution": report.get("verdict_distribution"),
+        "consistency": consistency_result,
+        "judge": judge_result,
+    }
+
+    if save:
+        results_dir = Path(__file__).parent / "results"
+        results_dir.mkdir(exist_ok=True)
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        out_path = results_dir / f"eval_{timestamp}.json"
+        with open(out_path, "w", encoding="utf-8") as f:
+            json.dump([entry], f, ensure_ascii=False, indent=2, default=str)
+        entry["saved_path"] = str(out_path)
+        print(f"\n[eval] 결과 저장 완료: {out_path}")
+
+    return entry
+
+
+# ── CLI ───────────────────────────────────────────────────────────────────────
 
 async def _run(args: argparse.Namespace) -> None:
     samples = _load_samples(args.file)
     print(f"[eval] {len(samples)}개 파일 로드 완료")
 
-    llm_client = _build_llm_client() if args.judge else None
-
     all_results = []
-
     for filename, report in samples:
-        print(f"\n[eval] 처리 중: {filename}")
-
-        # 내적 일관성 검사
-        consistency_result: dict = {}
-        if not args.skip_consistency:
-            print("  → 내적 일관성 검사 실행...")
-            consistency_result = run_all_consistency_checks(report)
-
-        # LLM Judge
-        judge_result: dict | None = None
-        if args.judge and llm_client is not None:
-            from eval.evaluators.llm_judge import run_all_judge_checks
-            print("  → LLM Judge 실행 (HCX-003)...")
-            judge_result = await run_all_judge_checks(report, llm_client)
-
-        # 콘솔 출력
-        _print_summary(filename, consistency_result, judge_result)
-
-        if args.verbose:
-            _print_fail_details(consistency_result, judge_result)
-
-        # 결과 수집
-        all_results.append(
-            {
-                "filename": filename,
-                "domain": report.get("domain"),
-                "anchor_year": report.get("anchor_year"),
-                "verdict_distribution": report.get("verdict_distribution"),
-                "consistency": consistency_result,
-                "judge": judge_result,
-            }
+        entry = await run_eval(
+            report,
+            label=filename,
+            judge=args.judge,
+            skip_consistency=args.skip_consistency,
+            verbose=args.verbose,
+            save=False,
         )
+        all_results.append(entry)
 
-    # results/ 저장
     results_dir = Path(__file__).parent / "results"
     results_dir.mkdir(exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
